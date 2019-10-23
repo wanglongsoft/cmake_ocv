@@ -1,1 +1,4 @@
 *.cpp linguist-language=java
+*.h linguist-language=java
+*.hpp linguist-language=java
+*.cpp linguist-language=java
