@@ -43,3 +43,74 @@ set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR
 ```java
 target_link_libraries(lib_opencv)
 ```
+#### 工程配置
+app目录下的build.gradle配置（省略无关配置）
+```java
+apply plugin: 'com.android.application'
+android {
+    defaultConfig {
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11 -frtti -fexceptions"
+                abiFilters 'x86', 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+
+    sourceSets {
+        main() {
+            jniLibs.srcDirs = ['src/main/libs'] //生成的.so库路径
+        }
+    }
+}
+```
+CMakeList.txt配置
+```java
+#设置编译 native library 需要最小的 cmake 版本
+cmake_minimum_required(VERSION 3.4.1)
+
+include_directories(include)
+
+file(GLOB my_source_path ${CMAKE_SOURCE_DIR}/*.cpp ${CMAKE_SOURCE_DIR}/*.c)
+
+#将指定的源文件编译为名为 libfunction_control.so的动态库
+add_library(function_control SHARED ${my_source_path})
+
+add_library(lib_opencv SHARED IMPORTED)
+add_library(lib_share SHARED IMPORTED)
+
+set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../libs/${ANDROID_ABI}/libopencv_java4.so)
+set_target_properties(lib_share PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../libs/${ANDROID_ABI}/libc++_shared.so)
+
+#查找本地 log 库
+find_library(log-lib log)
+
+#将预构建的库添加到自己的原生库
+target_link_libraries(function_control jnigraphics ${log-lib} lib_opencv lib_share)
+```
+#### 接口文件定义和调用
+```java
+package soft.wl.function;
+
+public class FunctionControl {
+    static {
+        System.loadLibrary("function_control");
+    }
+
+    public FunctionControl() {
+    }
+
+    native public Object sendCommand(int cmd , Object in, Object out);
+}
+
+//接口调用
+
+mOut = mFunctionControl.sendCommand(1024, mBitmap, Bitmap.Config.ARGB_8888);
+```
+#### 身份证号码识别
+
