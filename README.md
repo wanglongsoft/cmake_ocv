@@ -1,5 +1,7 @@
 # cmake_ocv
-Android CMake和OCV的简单用法
+Android CMake和OpenCV的简单用法
+#### 工程简介
+&emsp;&emsp;该工程用CMake编译C++/C代码生成lib库，使用动态注册方式实现Java层调用C++/C层接口，并且调用OpenCV共享库进行简单的图片处理，实现从一张身份证图片截取出身份证号码图片的功能
 #### CMake简介
 CMake 是一个开源的跨平台自动化构建系统，可生成 native 编译配置文件，在 Linux/Unix 平台，生成makefile，
 在Mac 平台，可以生成 xcode，在 Windows 平台，可以生成 MSVC 的工程文件
