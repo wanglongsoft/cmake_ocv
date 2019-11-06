@@ -113,4 +113,10 @@ public class FunctionControl {
 mOut = mFunctionControl.sendCommand(1024, mBitmap, Bitmap.Config.ARGB_8888);
 ```
 #### 身份证号码识别
-
+* 归一化&emsp;&emsp;&emsp;&emsp;身份证图片设置为统一大小
+* 灰度化&emsp;&emsp;&emsp;&emsp;RGB颜色值转化为灰度值
+* 二值化&emsp;&emsp;&emsp;&emsp;图片颜色值转化为0或者250，即非黑即白
+* 膨胀处理&emsp;&emsp;&emsp;将图片的黑色区域沿X方向扩大，方便查找身份证号码区域的位置和大小
+* 轮廓检测&emsp;&emsp;&emsp;查找图片区域的所有轮廓
+* 轮廓逻辑处理&emsp;逻辑判断，确定身份证号码所在的轮廓
+* 裁剪图片&emsp;&emsp;&emsp;将身份证号码截图用于显示
